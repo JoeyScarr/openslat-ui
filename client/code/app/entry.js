@@ -3,15 +3,15 @@
 window.ss = require('socketstream');
 
 // these are standalone angular modules
-require('/filters');
 require('/services');
 require('/directives');
+require('/chart');
 
 // this is the angular application
 var modules = [
-	'app.filters',
 	'app.services',
 	'app.directives',
+	'chart',
 	'$strap'
 ];
 

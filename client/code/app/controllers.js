@@ -130,6 +130,8 @@ module.exports = function(ngModule) {
 		$scope.graphData = {
 			xAxisLabel: '',
 			yAxisLabel: 'Mean Annual Rate of Exceedance',
+			xScale: 'log',
+			yScale: 'log',
 			lines: []
 		};
 		
