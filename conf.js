@@ -1,5 +1,7 @@
-module.exports = {
+// Configuration for the Node server.
 
-  webServer: {
-    port: 8080  }
+module.exports = {
+	webServer: {
+		port: 8080
+	}
 };

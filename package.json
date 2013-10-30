@@ -1,8 +1,8 @@
 {
-  "name": "Openslat",
-  "description": "Openslat",
+  "name": "OpenSLAT",
+  "description": "OpenSLAT",
   "version": "0.0.1",
-  "author": "Alan Williams",
+  "author": "Joey Scarr",
   "private": true,
   "engines": { "node": ">= 0.8.0" },
   "dependencies": {
