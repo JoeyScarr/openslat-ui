@@ -12,8 +12,7 @@ var modules = [
 	'app.filters',
 	'app.services',
 	'app.directives',
-	'$strap',
-	'ui'
+	'$strap'
 ];
 
 var app = angular.module('app', modules);
