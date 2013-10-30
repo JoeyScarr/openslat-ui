@@ -1,0 +1,103 @@
+<div ng-controller="ResultsCtrl" class="container-semifluid">
+	<div class="page-header">
+		<h1>Calculate <small>Compute and display your results.</small></h1>
+	</div>
+	
+	<p>In this section, you can choose which relationships to calculate based on the input data you supplied.</p>
+	
+	<p>Currently available relationships are:</p>
+	<div class="checkboxes">
+		<label>
+			<input type="checkbox" id="calcDemoHazard" ng-disabled="demoHazardAvailable() != ''" ng-model="options.demolitionRateCalc" />
+			<span ng-class="{disabled: demoHazardAvailable() != ''}">Annual probability of demolition, &lambda;<sub>D</sub> <span class="error">{{demoHazardAvailable()}}</span></span>
+		</label>
+		<label>
+			<input type="checkbox" id="calcCollapseHazard" ng-disabled="collapseHazardAvailable() != ''" ng-model="options.collapseRateCalc" />
+			<span ng-class="{disabled: collapseHazardAvailable() != ''}">Annual probability of collapse, &lambda;<sub>C</sub> <span class="error">{{collapseHazardAvailable()}}</span></span>
+		</label>
+		<label>
+			<input type="checkbox" id="calcEdpHazard" ng-disabled="edpHazardAvailable() != ''" ng-model="options.edpRateCalc" />
+			<span ng-class="{disabled: edpHazardAvailable() != ''}">Annual probability of EDP exceedance, &lambda;<sub>EDP</sub> <span class="error">{{edpHazardAvailable()}}</span></span>
+		</label>
+	</div>
+	
+	<!-- DEMOLITION HAZARD PANE -->
+	<div class="row-fluid" ng-show="options.demolitionRateCalc">
+		<div class="well well-small span12">
+			<h4>&lambda;<sub>D</sub>: Annual probability of demolition</h4>
+			<div ng-show="calculationStatus != REQUEST_PENDING">
+				<!-- Calculation options go here -->
+			</div>
+			<div ng-show="calculationStatus == REQUEST_PENDING">
+				<img src="images/ajax-loader.gif"/> <h5 style="display:inline-block">Calculating, please wait...</h5>
+			</div>
+			<div ng-show="calculationStatus == REQUEST_COMPLETE">
+				&lambda;<sub>D</sub> = {{ results.demolitionRate }}
+				<!--chart id="demoHazard" data="demoHazardGraphData" width="800px" height="500px"></chart-->
+			</div>
+		</div>
+	</div>
+	
+	<!-- COLLAPSE HAZARD PANE -->
+	<div class="row-fluid" ng-show="options.collapseRateCalc">
+		<div class="well well-small span12">
+			<h4>&lambda;<sub>C</sub>: Annual probability of collapse</h4>
+			<div ng-show="calculationStatus != REQUEST_PENDING">
+				<!-- Calculation options go here -->
+			</div>
+			<div ng-show="calculationStatus == REQUEST_PENDING">
+				<img src="images/ajax-loader.gif"/> <h5 style="display:inline-block">Calculating, please wait...</h5>
+			</div>
+			<div ng-show="calculationStatus == REQUEST_COMPLETE">
+				&lambda;<sub>C</sub> = {{ results.collapseRate }}
+				<!--chart id="collapseHazard" data="collapseHazardGraphData" width="800px" height="500px"></chart-->
+			</div>
+		</div>
+	</div>
+	
+	<!-- EDP HAZARD PANE -->
+	<div class="row-fluid" ng-show="options.edpRateCalc">
+		<div class="well well-small span12">
+			<h4>&lambda;<sub>EDP</sub>: Annual probability of EDP exceedance</h4>
+			<div ng-show="calculationStatus != REQUEST_PENDING">
+				<!-- Calculation options go here -->
+			</div>
+			<div ng-show="calculationStatus == REQUEST_PENDING">
+				<img src="images/ajax-loader.gif"/> <h5 style="display:inline-block">Calculating, please wait...</h5>
+			</div>
+			<div ng-show="calculationStatus == REQUEST_COMPLETE">
+				<table>
+					<tr>
+						<td style="vertical-align:top">
+							<div class="checkboxes">
+								<label ng-repeat="line in availableEdpLines">
+									<input type="checkbox" id="calcEDP{{ edp.identifier }}" ng-model="line.plot" ng-click="updateEdpChart()" />
+									<span>{{ line.name }}</span>
+								</label>
+							</div>
+						</td>
+						<td>
+							<chart id="edpHazard" data="edpHazardGraphData" width="800px" height="500px" style="float:right"></chart>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row-fluid" ng-show="!!im">
+		<input class="btn btn-primary pull-right" type="button" ng-click="calculate()" ng-disabled="!calculationValid()" value="Calculate" />
+	</div>
+	
+	<!-- JSON debug output -->
+	<div class="row-fluid" ng-show="!!im">
+		<p>
+		Sending to the server:
+		<pre class="prettyprint">{{ inputJson() }}</pre>
+		</p>
+		<p>
+		Receiving from the server:
+		<pre class="prettyprint">{{ outputJson }}</pre>
+		</p>
+	</div>
+</div>

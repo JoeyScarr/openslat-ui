@@ -1,0 +1,148 @@
+<div ng-controller="CollapseCtrl" class="container-semifluid">
+	<div class="page-header">
+		<h1>Collapse and Demolition <small>What is the probability of a building collapse?</small></h1>
+	</div>
+
+	<div class="row-fluid">
+		<p>
+			In this section, you will define the probability that the building will collapse
+			(or require demolition) in relation to the <i>intensity measure</i> defined in the
+			Seismic Hazard section, as well as the cost in case of a collapse.
+		</p>
+	</div>
+	
+	<div class="row-fluid">
+		<div class="well well-small span12">
+			<div ng-show="!im">
+				Error: Intensity measure undefined. Please complete the Seismic Hazard section first.
+			</div>
+			<div ng-show="!!im">
+				<b>Relationship between global collapse and {{ im.name }}: </b>
+				<buttons-radio class="btn-group" data-toggle="buttons-radio" model="relationshipType" values='[PARAMETRIC, DISCRETE]' labels='["Parametric", "From data file(s)"]'></buttons-radio>
+			</div>
+			
+			<!-- Relationship panel -->
+			<div class="well well-small" style="margin-top:10px" ng-show="!!im && relationshipType != null">
+				<!-- Top section -->
+				<table class="collapsedemoinput twoparam">
+					<tr>
+						<td>
+							<div ng-show="relationshipType == PARAMETRIC">
+								{{im.name}} at which <b>demolition</b> is required: <br />
+								Mean: <input class="numerical param" type="text" ng-model="demolition_mean" />
+								Log-normal SD: <input class="numerical param" type="text" ng-model="demolition_sd" />
+								<input class="btn btn-primary" type="button" ng-click="addDemolitionRelationship()" ng-disabled="!demolitionFormValid()" value="Add Relationship" />
+							</div>
+							<div ng-show="relationshipType == DISCRETE">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<span class="btn btn-file">
+										<span class="fileupload-new">Add new relationship from CSV file...</span>
+										<span class="fileupload-exists">Add new relationship from CSV file...</span>
+										<input type="file" id="demoFileSelect" />
+									</span>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div ng-show="relationshipType == PARAMETRIC">
+								{{im.name}} at which <b>collapse</b> occurs: <br />
+								Mean: <input class="numerical param" type="text" ng-model="collapse_mean" />
+								Log-normal SD: <input class="numerical param" type="text" ng-model="collapse_sd" />
+								<input class="btn btn-primary" type="button" ng-click="addCollapseRelationship()" ng-disabled="!collapseFormValid()" value="Add Relationship" />
+							</div>
+							<div ng-show="relationshipType == DISCRETE">
+								<div class="fileupload fileupload-new" data-provides="fileupload">
+									<span class="btn btn-file">
+										<span class="fileupload-new">Add new relationship from CSV file...</span>
+										<span class="fileupload-exists">Add new relationship from CSV file...</span>
+										<input type="file" id="collapseFileSelect" />
+									</span>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+				
+				<div>
+					<hr/>
+					<!-- Chart -->
+					<div class="pull-right">
+						<chart id="collapsegraph" data="graphData" scale="linear" width="800px" height="500px"></chart>
+					</div>
+					<div>
+						<h4>Demolition relationships:</h4>
+						<!-- Demolition relationships -->
+						<div class="graph-collapse" ng-repeat="rel in demolitionRelationships">
+							<b>[{{rel.name}}]</b>
+							Weighting: <input type="text" class="numerical" ng-model="rel.epistemicWeight" />
+							<a class="close" ng-click="removeDemolitionRel($index)" style="float: none">&times;</a>
+						</div>
+						<hr />
+						<h4>Collapse relationships:</h4>
+						<!-- Collapse relationships -->
+						<div class="graph-collapse" ng-repeat="rel in collapseRelationships">
+							<b>[{{rel.name}}]</b>
+							Weighting: <input type="text" class="numerical" ng-model="rel.epistemicWeight" />
+							<a class="close" ng-click="removeCollapseRel($index)" style="float: none">&times;</a>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Cost of demolition panel -->
+	<div class="row-fluid" ng-show="!!im">
+		<div class="well well-small span12">
+			<div>
+				<h4 style="display:inline-block">Cost of demolition:</h4>
+				<buttons-radio class="btn-group" data-toggle="buttons-radio" model="demoCollapse.demoLoss.type" values='[AUTOMATIC, MANUAL]' labels='["Automatic", "Manual"]'></buttons-radio>
+				<!--div class="btn-group" data-toggle="buttons-radio">
+					<button type="button" class="btn btn-secondary" ng-click="demoCollapse.demoLoss.type = AUTOMATIC">Automatic</button>
+					<button type="button" class="btn btn-secondary" ng-click="demoCollapse.demoLoss.type = MANUAL">Manual</button>
+				</div-->
+				<div ng-show="demoCollapse.demoLoss.type == AUTOMATIC">
+					<p>Total loss due to demolition will be calculated as the sum of the components defined on the Components tab, plus additional costs defined below:</p>
+					<p>
+						Additional costs (e.g. due to re-design and demolition): <span style="font-size: ">$<input type="text" class="numerical cost" ng-model="demoCollapse.demoLoss.extra" placeholder="0" />
+					</span></p>
+				</div>
+				<div ng-show="demoCollapse.demoLoss.type == MANUAL">
+					<p>Total loss due to demolition will be calculated using the relationship defined below:</p>
+					<div>
+					Mean: $<input type="text" class="numerical cost" ng-model="demoCollapse.demoLoss.mean" placeholder="0" /></div>
+					<div>
+					Aleatory uncertainty: <input type="text" class="numerical cost" ng-model="demoCollapse.demoLoss.sd" placeholder="0" /></div>
+					<div>
+					Epistemic uncertainty: <input type="text" class="numerical cost" ng-model="demoCollapse.demoLoss.epistemicUncertainty" placeholder="0" /></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Cost of collapse panel -->
+	<div class="row-fluid" ng-show="!!im">
+		<div class="well well-small span12">
+			<div>
+				<h4 style="display:inline-block">Cost of collapse:</h4>
+				<buttons-radio class="btn-group" data-toggle="buttons-radio" model="demoCollapse.collapseLoss.type" values='[AUTOMATIC, MANUAL]' labels='["Automatic", "Manual"]'></buttons-radio>
+				<div ng-show="demoCollapse.collapseLoss.type == AUTOMATIC">
+					<p>Total loss due to collapse will be calculated as the sum of the components defined on the Components tab, plus additional costs defined below:</p>
+					<p>
+						Additional costs (e.g. due to re-design and demolition): $<input type="text" class="numerical cost" ng-model="demoCollapse.collapseLoss.extra" placeholder="0" />
+					</p>
+				</div>
+				<div ng-show="demoCollapse.collapseLoss.type == MANUAL">
+					<p>Total loss due to demolition will be calculated using the relationship defined below:</p>
+					<div>
+					Mean: $<input type="text" class="numerical cost" ng-model="demoCollapse.collapseLoss.mean" placeholder="0" /></div>
+					<div>
+					Aleatory uncertainty: <input type="text" class="numerical cost" ng-model="demoCollapse.collapseLoss.sd" placeholder="0" /></div>
+					<div>
+					Epistemic uncertainty: <input type="text" class="numerical cost" ng-model="demoCollapse.collapseLoss.epistemicUncertainty" placeholder="0" /></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,99 @@
+<div ng-controller="StructureCtrl" class="container-semifluid">
+	<div class="page-header">
+		<h1>System Definition <small>What components is the structure made of?</small></h1>
+	</div>
+	<div class="row-fluid">
+		<p class="span6">Define your structure by adding component types and quantities.
+		</p>
+	</div>
+	<div class="row-fluid">
+		<form name="pgroupform" ng-submit="addPGroup()">
+			<div class="well well-small">
+				<div ng-show="!edps">
+					Error: No engineering demand parameters found. Please complete the Structural Response section first.
+				</div>
+				<table style="width:100%" ng-show="!!edps">
+					<tr>
+						<td>
+							<input class="span10" type="text" ng-model="pgroupName" placeholder="Component group name (e.g., 2nd storey RC beam-column joints)" />
+							<input class="span2 pull-right" type="number" ng-model="pgroupQuantity" min="1" value="1" placeholder="Quantity" />
+							<div class="form-label">
+								Component type:
+							</div>
+							<select class="span9 pull-right" ng-model="pgroupFF" ng-options="fragFunc.identifier as fragFunc.name for fragFunc in ff"></select>
+						</td>
+					</tr>
+					<tr ng-show="pgroupFF == 0">
+						<td>
+							<div class="well well-small">
+								<!-- Internal form for creating custom component types (fragility functions) -->
+								<innerform ng-form name="fragilityform" ng-submit="addCustomFf()">
+									<h4>Create Custom Component Type</h4>
+									<table width="100%">
+									<tr>
+										<td>
+											<input class="span12" type="text" ng-model="customFfName" placeholder="Name of new component type" />
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<h5>Damage states:</h5>
+											<div class="well well-small">
+												TODO: Add new damage state here
+											</div>
+											<div ng-repeat="ds in damagestates" class="well well-small">
+												Mean = {{ds.meanEDPOnset}}, Std. Dev. = {{ds.sigmaEDPOnset}}
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input class="btn btn-primary pull-right" type="button" ng-click="addCustomFf()" ng-disabled="!ffFormValid()" value="Save and Use Custom Component Type" />
+										</td>
+									</tr>
+									</table>
+								</innerform>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="form-label">
+								Component damage depends on:
+							</div>
+							<select class="span9 pull-right" ng-model="pgroupEDP" ng-options="edp.identifier as edp.name for edp in edps">
+								<option value="">-- Choose the related EDP --</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input class="btn btn-primary pull-right" type="submit" ng-disabled="!pgroupFormValid()" value="Add New Component" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</div>
+	<h4 ng-show="!!edps">Components:</h4>
+	<div class="row-fluid" ng-show="!!edps">
+		<div class="well well-small">
+			<table class="components">
+				<tr class="comp-header">
+					<th width="80px">Quantity</th>
+					<th>Name</th>
+					<th>Component Type</th>
+					<th>Depends on</th>
+					<th width="100px"></th>
+				</tr>
+				<tr ng-repeat="item in pgroups">
+					<td>{{item.quantity}}</td>
+					<td>{{item.name}}</td>
+					<td>{{getFFName(item.ff)}}</td>
+					<td>{{getEdpName(item.edp)}}</td>
+					<td><a class="edit-delete" ng-click="editPGroup(item)">Edit</a> | <a class="edit-delete" ng-click="deletePGroupConfirm(item)">Delete</a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

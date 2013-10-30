@@ -15,10 +15,12 @@ app.use(express.bodyParser());
 // Define a single-page client called 'main'
 ss.client.define('main', {
 	view: 'app.html',
-	css: ['libs', 'main.css', 'impage.css', 'optionspage.css', 'forms.css'],
+	css: ['libs', 'main.css', 'chart.css', 'forms.css'],
 	code: ['libs', 'app'],
 	tmpl: '*'
 });
+
+ss.client.templateEngine.use('angular');
 
 
 /*******************************************************************************
