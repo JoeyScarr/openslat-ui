@@ -238,7 +238,7 @@ angular.module('app.services', []).
 					});
 				}
 				
-				// Send the data to the server.
+				// Send the data to the server and start polling.
 				$http.post("/calculate", jsonConverter.convert(inputJson))
 				.success(function(data, status, headers, config) {
 					console.log(data);

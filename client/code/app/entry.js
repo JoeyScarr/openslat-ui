@@ -30,12 +30,3 @@ ss.server.on('disconnect', function () {
 ss.server.on('reconnect', function () {
 	$('#warning').modal('hide');
 });
-
-ss.server.on('ready', function () {
-
-	// Wait for the DOM to finish loading
-	jQuery(function () {
-		// no-op
-	});
-
-});

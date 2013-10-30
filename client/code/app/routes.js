@@ -16,7 +16,6 @@ module.exports = function (ngModule) {
 			.when('/edp', { action: 'edp.view' })
 			.when('/structure', { action: 'structure.view' })
 			.when('/collapse', { action: 'collapse.view' })
-			.when('/ff', { action: 'ff.view' })
 			.when('/results', { action: 'results.view' })
 			.when('/foo', { action: 'foo.view' })
 			.when('/bar', { action: 'bar.view' })
