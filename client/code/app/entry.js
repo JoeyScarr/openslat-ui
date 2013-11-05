@@ -3,9 +3,9 @@
 window.ss = require('socketstream');
 
 // these are standalone angular modules
-require('/services');
-require('/directives');
-require('/chart');
+require('/services.js');
+require('/directives.js');
+require('/chart.js');
 
 // this is the angular application
 var modules = [
@@ -18,10 +18,10 @@ var modules = [
 var app = angular.module('app', modules);
 
 // configure angular routing
-require('/routes')(app);
+require('/routes.js')(app);
 
 // setup angular controllers
-require('/controllers')(app);
+require('/controllers.js')(app);
 
 ss.server.on('disconnect', function () {
 	$('#warning').modal('show');

@@ -1,8 +1,12 @@
-/*global angular */
-// client/code/app/directives
-/* AngularJS directives */
-angular.module('app.directives', [])
-	.directive('buttonsRadio', function() {
+"use strict";
+
+/* A module containing useful custom Angular directives. */
+var MOD_directives = angular.module('app.directives', []);
+
+/*******************************************************************************
+ * A custom radio button control.
+ ******************************************************************************/
+MOD_directives.directive('buttonsRadio', function() {
 	return {
 		restrict: 'E',
 		scope: { model: '=', values:'&', labels:'&' },

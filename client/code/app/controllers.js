@@ -358,7 +358,8 @@ module.exports = function(ngModule) {
 	
 	
 	// EdpCtrl - Response page
-	ngModule.controller('EdpCtrl', ['$scope', 'rpc', 'pubsub', 'inputService', 'pathService', 'textParser', function($scope, rpc, pubsub, inputService, pathService, textParser) {
+	ngModule.controller('EdpCtrl', ['$scope', 'inputService', 'pathService', 'textParser',
+																	function($scope, inputService, pathService, textParser) {
 		
 		$scope.PARAMETRIC = 'LogNormalModel';
 		$scope.DISCRETE = 'EDPIMDiscreteModel';
@@ -769,7 +770,8 @@ module.exports = function(ngModule) {
 	
 
 	// StructureCtrl - Structure page
-	ngModule.controller('StructureCtrl', ['$scope', 'rpc', 'pubsub', '$http', 'inputService', function($scope, rpc, pubsub, $http, inputService) {
+	ngModule.controller('StructureCtrl', ['$scope', '$http', 'inputService',
+																				function($scope, $http, inputService) {
 		var newFF = {
 			'identifier': 0,
 			'name': "Create new..."
@@ -840,8 +842,8 @@ module.exports = function(ngModule) {
 	}]);
 
 	// CollapseCtrl - Global Collapse page
-	ngModule.controller('CollapseCtrl', ['$scope', 'rpc', 'pubsub', 'inputService', 'colorService', 'pathService', 'textParser', 'distService',
-			function($scope, rpc, pubsub, inputService, colorService, pathService, textParser, distService) {
+	ngModule.controller('CollapseCtrl', ['$scope', 'inputService', 'colorService', 'pathService', 'textParser', 'distService',
+			function($scope, inputService, colorService, pathService, textParser, distService) {
 		
 		// Enums
 		$scope.PARAMETRIC = 'LogNormalModel';
@@ -1029,7 +1031,7 @@ module.exports = function(ngModule) {
 	}]);
 
 	// FfCtrl - Fragility Function page
-	ngModule.controller('FfCtrl', ['$scope', 'rpc', 'pubsub', '$http', function($scope, rpc, pubsub, $http) {
+	ngModule.controller('FfCtrl', ['$scope', '$http', function($scope, $http) {
 		$http.get('/getff').
 		success(function(data) {
 			$scope.ff = data.fragilityfunctions;
@@ -1043,7 +1045,7 @@ module.exports = function(ngModule) {
 	}]);
 
 	// ResultsCtrl - Calculate/Results page
-	ngModule.controller('ResultsCtrl', ['$scope', 'rpc', 'pubsub', '$http', 'inputService', function($scope, rpc, pubsub, $http, inputService) {
+	ngModule.controller('ResultsCtrl', ['$scope', '$http', 'inputService', function($scope, $http, inputService) {
 		$scope.im = inputService.getIm();
 		$scope.edps = inputService.getEdps();
 		
