@@ -14,7 +14,6 @@ var MOD_services = angular.module('app.services', []);
  ******************************************************************************/
 MOD_services.factory('inputService', ['$http', '$timeout', 'jsonConverter',
 											function($http, $timeout, jsonConverter) {
-	console.log('inputService service created');
 	//var inputJson = {};
 	var inputJson = {
 		"im":{

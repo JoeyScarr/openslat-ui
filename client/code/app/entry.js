@@ -21,7 +21,12 @@ var app = angular.module('app', modules);
 require('/routes.js')(app);
 
 // setup angular controllers
-require('/controllers.js')(app);
+require('/controllers/controllers-main.js');
+require('/controllers/im-controller.js');
+require('/controllers/edp-controller.js');
+require('/controllers/structure-controller.js');
+require('/controllers/collapse-controller.js');
+require('/controllers/results-controller.js');
 
 ss.server.on('disconnect', function () {
 	$('#warning').modal('show');
