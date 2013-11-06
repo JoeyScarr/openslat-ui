@@ -52,28 +52,29 @@ MOD_app.controller('CollapseCtrl', ['$scope', 'inputService', 'colorService', 'p
 	// Update the chart with the currently selected relationship.
 	$scope.displayChart = function() {
 		var lines = [];
+		var colorMap = colorService.makeColorMap();
 		// Demolition relationships
 		for (var i = 0; i < $scope.demolitionRelationships.length; ++i) {
 			var rel = $scope.demolitionRelationships[i];
 			if (rel.model.type == $scope.DISCRETE) {
-				lines.push($scope.makeDiscreteLine('Demolition Rel ' + (i + 1), rel.model.points));
+				lines.push($scope.makeDiscreteLine('Demolition Rel ' + (i + 1), rel.model.points, colorMap));
 			} else if (rel.model.type == $scope.PARAMETRIC) {
-				lines.push($scope.makeLogNormalLine('Demolition Rel ' + (i + 1), rel.model.mean, rel.model.sd));
+				lines.push($scope.makeLogNormalLine('Demolition Rel ' + (i + 1), rel.model.mean, rel.model.sd, colorMap));
 			}
 		}
 		// Collapse relationships
 		for (var i = 0; i < $scope.collapseRelationships.length; ++i) {
 			var rel = $scope.collapseRelationships[i];
 			if (rel.model.type == $scope.DISCRETE) {
-				lines.push($scope.makeDiscreteLine('Collapse Rel ' + (i + 1), rel.model.points));
+				lines.push($scope.makeDiscreteLine('Collapse Rel ' + (i + 1), rel.model.points, colorMap));
 			} else if (rel.model.type == $scope.PARAMETRIC) {
-				lines.push($scope.makeLogNormalLine('Collapse Rel ' + (i + 1), rel.model.mean, rel.model.sd));
+				lines.push($scope.makeLogNormalLine('Collapse Rel ' + (i + 1), rel.model.mean, rel.model.sd, colorMap));
 			}
 		}
 		$scope.graphData.lines = lines;
 	};
 	
-	$scope.makeLogNormalLine = function(name, mean, sd) {
+	$scope.makeLogNormalLine = function(name, mean, sd, colorMap) {
 		var meanln = Math.log(mean) - sd*sd/2.0;
 		var x_lowerlimit = Math.max(0.000001, Math.exp(meanln - sd*4));
 		var x_upperlimit = Math.exp(meanln + sd*4);
@@ -88,6 +89,7 @@ MOD_app.controller('CollapseCtrl', ['$scope', 'inputService', 'colorService', 'p
 			"func": function(i) {
 				return distService.lognormalCumulativeProbability(i, meanln, sd);
 			},
+			"color": colorMap.getNextColor(),
 			"limits": {
 				xmin: x_lowerlimit,
 				xmax: x_upperlimit,
@@ -97,11 +99,12 @@ MOD_app.controller('CollapseCtrl', ['$scope', 'inputService', 'colorService', 'p
 		};
 	};
 	
-	$scope.makeDiscreteLine = function(name, points) {
+	$scope.makeDiscreteLine = function(name, points, colorMap) {
 		return {
 			"name": name,
 			"isDiscrete": true,
-			"data": points
+			"data": points,
+			"color": colorMap.getNextColor()
 		};
 	};
 	
