@@ -78,22 +78,28 @@ MOD_app.controller('EdpCtrl', ['$scope', 'inputService', 'pathService', 'textPar
 	// Update the chart with the currently selected relationship.
 	$scope.displayChart = function(relationshipType, meanParametricType, sdParametricType) {
 		var lines = [];
+		var extraPoints = [];
 		if (relationshipType == $scope.DISCRETE) {
 			if ($scope.discreteData != null) {
 				// Iterate over the discrete data and convert it into three lines.
 				var meanline = {
 					name: "Mean",
 					isDiscrete: true,
+					color: "red",
 					data: []
 				};
 				var upper = {
 					name: "84th percentile",
 					isDiscrete: true,
+					color: "red",
+					dasharray: "10,10",
 					data: []
 				};
 				var lower = {
 					name: "16th percentile",
 					isDiscrete: true,
+					color: "red",
+					dasharray: "10,10",
 					data: []
 				};
 				
@@ -110,7 +116,6 @@ MOD_app.controller('EdpCtrl', ['$scope', 'inputService', 'pathService', 'textPar
 				
 				// If there are extra points to display, process them and add to the mean line.
 				if (!!$scope.extraPoints) {
-					meanline.extraPoints = [];
 					for (var i = 0; i < $scope.extraPoints.length; ++i) {
 						var pointarray = $scope.extraPoints[i];
 						for (var j = 1; j < pointarray.length; ++j) {
@@ -118,7 +123,10 @@ MOD_app.controller('EdpCtrl', ['$scope', 'inputService', 'pathService', 'textPar
 							if (pointarray[j] == 0) {
 								continue;
 							}
-							meanline.extraPoints.push([pointarray[0], pointarray[j]]);
+							extraPoints.push({
+								x: pointarray[0],
+								y: pointarray[j]
+							});
 						}
 					}
 				}
@@ -154,25 +162,34 @@ MOD_app.controller('EdpCtrl', ['$scope', 'inputService', 'pathService', 'textPar
 					};
 				}
 				if (sdfunc != null) {
-					lines.push($scope.makeParametricLine("84th percentile", function(x) {
+					var line84 = $scope.makeParametricLine("84th percentile", function(x) {
 						var mu = func(x);
 						var sigma = sdfunc(x);
 						var x84 = mu * Math.exp(sigma - sigma*sigma/2.0);
 						return x84;
-					}, xmin, xmax));
+					}, xmin, xmax);
+					line84.color = "red";
+					line84.dasharray = "10,10";
+					lines.push(line84);
 				}
-				lines.push($scope.makeParametricLine("Parametric relationship", func, xmin, xmax));
+				var linemean = $scope.makeParametricLine("Parametric relationship", func, xmin, xmax);
+				linemean.color = "red";
+				lines.push(linemean);
 				if (sdfunc != null) {
-					lines.push($scope.makeParametricLine("16th percentile", function(x) {
+					var line16 = $scope.makeParametricLine("16th percentile", function(x) {
 						var mu = func(x);
 						var sigma = sdfunc(x);
 						var x16 = mu * Math.exp(-sigma - sigma*sigma/2.0);
 						return x16;
-					}, xmin, xmax));
+					}, xmin, xmax);
+					line16.color = "red";
+					line16.dasharray = "10,10";
+					lines.push(line16);
 				}
 			}
 		}
 		$scope.newEdpGraphData.lines = lines;
+		$scope.newEdpGraphData.extraPoints = extraPoints;
 		
 	};
 	
