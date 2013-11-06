@@ -87,18 +87,19 @@ MOD_app.controller('ImCtrl', ['$scope', 'inputService', 'pathService', 'colorSer
 	
 	// Update the chart with the currently selected relationship.
 	$scope.displayChart = function(relationshipType, parametricType) {
+		var colorMap = colorService.makeColorMap();
 		if (relationshipType == $scope.PARAMETRIC) {
 			if (parametricType == $scope.POWERMODEL) {
-				var line = $scope.makePowerModelLine($scope.power_k0, $scope.power_k);
+				var line = $scope.makePowerModelLine($scope.power_k0, $scope.power_k, colorMap);
 				$scope.graphData.lines = [line];
 			} else if (parametricType == $scope.HYPERBOLICMODEL) {
-				var line = $scope.makeHyperbolicModelLine($scope.hyperbolic_vasy, $scope.hyperbolic_IMasy, $scope.hyperbolic_alpha);
+				var line = $scope.makeHyperbolicModelLine($scope.hyperbolic_vasy, $scope.hyperbolic_IMasy, $scope.hyperbolic_alpha, colorMap);
 				$scope.graphData.lines = [line];
 			}
 		} else if (relationshipType == $scope.DISCRETE) {
 			var lines = [];
 			for (var i = 0; i < $scope.discreteRelationships.length; ++i) {
-				lines.push($scope.makeDiscreteLine('Relationship ' + (i + 1), $scope.discreteRelationships[i].model.points));
+				lines.push($scope.makeDiscreteLine('Relationship ' + (i + 1), $scope.discreteRelationships[i].model.points, colorMap));
 			}
 			$scope.graphData.lines = lines;
 		}
@@ -145,7 +146,7 @@ MOD_app.controller('ImCtrl', ['$scope', 'inputService', 'pathService', 'colorSer
 		}
 	};
 
-	$scope.makePowerModelLine = function(k0, k) {
+	$scope.makePowerModelLine = function(k0, k, colorMap) {
 		var func = function(x) {
 			return k0 / Math.pow(x, k);
 		};
@@ -156,6 +157,7 @@ MOD_app.controller('ImCtrl', ['$scope', 'inputService', 'pathService', 'colorSer
 			"name": 'Power Model',
 			"isDiscrete": false,
 			"func": func,
+			"color": colorMap.getNextColor(),
 			"limits": {
 				xmin: xmin,
 				xmax: xmax,
@@ -165,7 +167,7 @@ MOD_app.controller('ImCtrl', ['$scope', 'inputService', 'pathService', 'colorSer
 		};
 	};
 
-	$scope.makeHyperbolicModelLine = function(vasy, IMasy, alpha, parameters) {
+	$scope.makeHyperbolicModelLine = function(vasy, IMasy, alpha, colorMap) {
 		var func = function(x) {
 			return vasy * Math.exp(alpha / (Math.log(x / IMasy)));
 		};
@@ -176,6 +178,7 @@ MOD_app.controller('ImCtrl', ['$scope', 'inputService', 'pathService', 'colorSer
 			"name": 'Hyperbolic Model',
 			"isDiscrete": false,
 			"func": func,
+			"color": colorMap.getNextColor(),
 			"limits": {
 				xmin: xmin,
 				xmax: xmax,
@@ -185,11 +188,12 @@ MOD_app.controller('ImCtrl', ['$scope', 'inputService', 'pathService', 'colorSer
 		};
 	};
 	
-	$scope.makeDiscreteLine = function(name, points) {
+	$scope.makeDiscreteLine = function(name, points, colorMap) {
 		return {
 			"name": name,
 			"data": points,
-			"isDiscrete": true
+			"isDiscrete": true,
+			"color": colorMap.getNextColor()
 		};
 	};
 	
