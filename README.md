@@ -1,30 +1,23 @@
-### Earthquake Engineering Value-At-Risk Software via SaaS
+#OpenSLAT: Earthquake Engineering Value-At-Risk Software
 
-This software calculates the financial and life-safety risk for commercial buildings in New Zealand, part of the design and risk assessment process for new buildings. This project is also a proof-of-concept in converting research to a usable tool as quickly and flexibly as possible.
+This software calculates the financial and life-safety risk for commercial buildings in New Zealand,
+part of the design and risk assessment process for new buildings.
 
-### Features
-* SaaS model 
-* Server-based computation engine
-* Browser client
-* parallel and scalable
-* json HTTP api
+##Developing:
+OpenSLAT is based on three components: the backend calculator (incomplete, and not included in this repo), the server (based on Node.js), and the UI (written in HTML, Javascript and [AngularJS](http://angularjs.org/)).
 
-This project brings leading earthquake engineering research to an educational and consulting setting through a simple and flexible user interface coupled to a server-based or local computation engine. A local mode is available.
- 
-### Components 
-* [The OpenSLAT project] (https://github.com/statX/openslat)
-* NodeJS
-* RabbitMQ
+In order to set up a local development server, you will need to install [Node.js](http://nodejs.org/).
+After cloning the repo, you will need to run `npm install` from the root directory.
 
+The server can be started with the command:
+
+	node app.js
+
+Then in a web browser, visit [http://localhost:8080/](http://localhost:8080/)
+
+##Testing:
+Unit and integration tests are yet to be written.
+
+##Screenshots:
 <div><img title="screenshot 1" src="https://dl.dropboxusercontent.com/u/128539/openslat_github_1.png" align=center height = 300 /></div>
 <div><img title="screenshot 1" src="https://dl.dropboxusercontent.com/u/128539/openslat_github_2.png" align=center height = 300 /></div>
-
-### Experiment
-
-```sh
-$ git clone
-$ npm install
-$ node app.js
-```
-
-point browser at http://localhost:8080/
