@@ -1,0 +1,11 @@
+Missing functionality (major):
+- Modify app.js to be able to handle multiple calculations. Requests should include a token, and the same token can be used to check on the status of a calculation.
+- Once the backend is working, add the ability to calculate loss.
+
+To do (minor):
+- Write unit tests and integration tests
+- Add "What's this?" documentation to the UI wherever things are unclear
+- Make global collapse page look nicer
+- Add the ability to create custom fragility functions on the Structure page
+- Add the ability to view EDPs on a graph together on the EDP page
+- Add graphs of the fragility functions on the component page
